@@ -1,16 +1,16 @@
+import { BrowserLogsLogEntry } from './browserlogs';
+import { internalErrorLogger } from './capture';
+import { FLUSH_BYTE_LIMIT, LOG_LINE_FLUSH_TIMEOUT, MAX_BACK_OFF, MAX_FETCH_ERROR_RETRY, STARTING_BACK_OFF } from './constants';
 import { getOptions } from './init';
 import utils from './utils';
-import { internalErrorLogger } from './capture';
-import { LogDNALogLine } from './logdna';
-import { FLUSH_BYTE_LIMIT, STARTING_BACK_OFF, MAX_BACK_OFF, MAX_FETCH_ERROR_RETRY, LOG_LINE_FLUSH_TIMEOUT } from './constants';
 
-let buffer: LogDNALogLine[] = [];
+let buffer: BrowserLogsLogEntry[] = [];
 let retryCount: number = 0;
 let backOffInterval: number = 0;
 let loggerError: boolean = false;
 let timer: number | undefined;
 
-const process = async (lines: LogDNALogLine | LogDNALogLine[]) => {
+const process = async (lines: BrowserLogsLogEntry | BrowserLogsLogEntry[]) => {
   if (Array.isArray(lines)) {
     buffer = buffer.concat(lines);
   } else {
@@ -41,17 +41,17 @@ const timeout = (): number | undefined => {
   return getOptions().flushInterval || LOG_LINE_FLUSH_TIMEOUT;
 };
 
-const splitAndFlush = async (logLines: LogDNALogLine[]) => {
-  const lines: LogDNALogLine[] = [...logLines];
+const splitAndFlush = async (logLines: BrowserLogsLogEntry[]) => {
+  const lines: BrowserLogsLogEntry[] = [...logLines];
   const half: number = Math.floor(lines.length / 2);
-  const lines2: LogDNALogLine[] = lines.splice(half);
+  const lines2: BrowserLogsLogEntry[] = lines.splice(half);
 
-  [lines, lines2].forEach(async block => await flush(block));
+  [lines, lines2].forEach(async (block) => await flush(block));
 };
 
-const isUnderByteLimit = (buffer: LogDNALogLine[]) => utils.jsonByteSize(buffer) < FLUSH_BYTE_LIMIT;
+const isUnderByteLimit = (buffer: BrowserLogsLogEntry[]) => utils.jsonByteSize(buffer) < FLUSH_BYTE_LIMIT;
 
-const flush = async (lines?: LogDNALogLine[]) => {
+const flush = async (lines?: BrowserLogsLogEntry[]) => {
   if (!lines) {
     lines = [...buffer];
     buffer = [];
@@ -62,13 +62,13 @@ const flush = async (lines?: LogDNALogLine[]) => {
   if (isUnderByteLimit(lines)) {
     await send(lines);
   } else if (lines.length === 1) {
-    internalErrorLogger(`LogDNA Browser Logger was unable to send the previous log lines because the log size was greater than ${FLUSH_BYTE_LIMIT} bytes`);
+    internalErrorLogger(`Browser Logs was unable to send the previous log lines because the log size was greater than ${FLUSH_BYTE_LIMIT} bytes`);
   } else {
     await splitAndFlush(lines);
   }
 };
 
-const send = async (lines: LogDNALogLine[]) => {
+const send = async (lines: BrowserLogsLogEntry[]) => {
   const opts = getOptions();
   if (loggerError) {
     return;
@@ -84,14 +84,14 @@ const send = async (lines: LogDNALogLine[]) => {
   ]);
 
   const ingestUrl = `${opts.url}?${ingestUrlParams}`;
-  const errorMsg = 'Unable to send previous logs batch to LogDNA';
+  const errorMsg = 'Unable to send previous logs batch to backend';
 
   try {
     const response = await fetch(ingestUrl, {
       method: 'POST',
       keepalive: true,
       headers: {
-        Authorization: `Basic ${btoa(`${opts.ingestionKey}:`)}`,
+        Authorization: `Bearer ${opts.ingestionKey}`,
         'Content-Type': 'application/json',
       },
       body: utils.stringify({ lines }),
@@ -119,17 +119,11 @@ const send = async (lines: LogDNALogLine[]) => {
     loggerError = true;
 
     internalErrorLogger(
-      `LogDNA Browser Logger is unable to send logs to LogDNA. 
-      Possible issues:
-       - Your web apps url (${window.location.origin}) is not listed in your LogDNA account's CORS whitelist domains
-       - Ingestion key is incorrect
-       - The configured LogDNA ingestion url is incorrect
-       - LogDNA ingestion endpoint is down. https://status.mezmo.com/
-
-       Error: ${(error as Error).message}
+      `Browser Logs is unable to send logs to backend. 
+      Error: ${(error as Error).message}
       `,
     );
   }
 };
 
-export { process, flush };
+export { flush, process };

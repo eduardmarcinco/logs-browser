@@ -1,14 +1,12 @@
 import { process } from '../src/buffer-manager';
 import { LOG_LINE_FLUSH_TIMEOUT } from '../src/constants';
-import { LogDNALogLine } from '../src/logdna';
+import { BrowserLogsLogEntry } from '../src/browserlogs';
 import * as captureManger from '../src/capture';
 
-const logLine: LogDNALogLine = {
+const logLine: BrowserLogsLogEntry = {
   timestamp: 999999999,
   level: 'log',
-  line: 'Test message' + 999999999,
-  env: 'test',
-  app: 'unit-tests',
+  log: 'Test message' + 999999999,
 };
 
 const generateLogLine = (count: number = 1) => {
@@ -44,7 +42,7 @@ describe('buffer-manager.ts', () => {
       jest.useFakeTimers();
       await process(generateLogLine(10000));
       jest.advanceTimersByTime(LOG_LINE_FLUSH_TIMEOUT);
-      expect(window.fetch).toHaveBeenCalledTimes(32);
+      expect(window.fetch).toHaveBeenCalledTimes(16);
     });
   });
 

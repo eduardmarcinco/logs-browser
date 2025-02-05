@@ -1,27 +1,27 @@
+import { BrowserLogsOptions } from './browserlogs';
+import { BrowserLogsMethods } from './BrowserLogsMethods';
+import { internalErrorLogger } from './capture';
 import { isInitiated } from './init';
-import Logger from './plugins/logger';
 import Console, { ConsolePlugin } from './plugins/console';
 import GlobalErrorHandler, { GlobalErrorHandlerPlugin } from './plugins/global-handler';
-import { internalErrorLogger } from './capture';
+import Logger from './plugins/logger';
 import utils from './utils';
-import { LogDNABrowserOptions } from './logdna';
-import { LogDNAMethods } from './LogDNAMethods';
 
 type InstalledPlugins = string[];
 
 const installedPlugins: InstalledPlugins = [];
 
-export const addPluginMethods = (options: LogDNABrowserOptions) => {
+export const addPluginMethods = (options: BrowserLogsOptions) => {
   if (!Array.isArray(options.plugins)) return;
 
-  options.plugins.forEach(p => {
+  options.plugins.forEach((p) => {
     if (!utils.isFunction(p.methods)) return;
 
     // @ts-ignore
     const plugin = p.methods();
-    Object.keys(plugin).forEach(m => {
+    Object.keys(plugin).forEach((m) => {
       // @ts-ignore
-      LogDNAMethods.prototype[m] = (...args: any) => {
+      BrowserLogsMethods.prototype[m] = (...args: any) => {
         if (!isInitiated()) return;
 
         /* istanbul ignore next */
@@ -31,10 +31,10 @@ export const addPluginMethods = (options: LogDNABrowserOptions) => {
   });
 };
 
-export const initPlugins = (options: LogDNABrowserOptions) => {
+export const initPlugins = (options: BrowserLogsOptions) => {
   if (!Array.isArray(options.plugins)) return;
 
-  options.plugins.forEach(p => {
+  options.plugins.forEach((p) => {
     if (utils.isFunction(p.init)) {
       try {
         // @ts-ignore
@@ -59,7 +59,7 @@ export const initPlugins = (options: LogDNABrowserOptions) => {
   });
 };
 
-export const addDefaultPlugins = (options: LogDNABrowserOptions) => {
+export const addDefaultPlugins = (options: BrowserLogsOptions) => {
   const { console: consoleOpts, globalErrorHandlers } = options;
   if (!options.plugins) {
     options.plugins = [];

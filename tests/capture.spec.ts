@@ -38,10 +38,8 @@ describe('capture.ts', () => {
       expect(process).toHaveBeenCalledTimes(1);
       expect(process).toHaveBeenCalledWith({
         timestamp: expect.any(Number),
-        app: expect.any(String),
-        line: 'Testing',
+        log: 'Testing',
         level: 'log',
-        meta: expect.any(Object),
       });
     });
 
@@ -56,10 +54,8 @@ describe('capture.ts', () => {
       expect(process).toHaveBeenCalledTimes(1);
       expect(process).toHaveBeenCalledWith({
         timestamp: expect.any(Number),
-        app: expect.any(String),
-        line: 'Error: Error Message',
+        log: 'Error: Error Message',
         level: 'error',
-        meta: expect.any(Object),
       });
     });
 
@@ -101,10 +97,8 @@ describe('capture.ts', () => {
       expect(process).toHaveBeenCalledTimes(1);
       expect(process).toHaveBeenCalledWith({
         timestamp: expect.any(Number),
-        app: expect.any(String),
-        line: 'TypeError: Error Message',
+        log: 'TypeError: Error Message',
         level: 'error',
-        meta: expect.any(Object),
       });
     });
 
@@ -117,10 +111,8 @@ describe('capture.ts', () => {
       expect(process).toHaveBeenCalledTimes(1);
       expect(process).toHaveBeenCalledWith({
         timestamp: expect.any(Number),
-        app: expect.any(String),
-        line: 'Error Message',
+        log: 'Error Message',
         level: 'error',
-        meta: expect.any(Object),
       });
     });
   });

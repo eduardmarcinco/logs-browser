@@ -1,23 +1,22 @@
-import { DEFAULT_CONFIG, LOG_LINE_FLUSH_TIMEOUT } from './constants';
-import { validateOptions } from './validation';
-import { addPluginMethods, initPlugins, addDefaultPlugins } from './plugin-manager';
-import utils from './utils';
 import { flush } from './buffer-manager';
-import { init as sessionManagerInit } from './session-manager';
+import { DEFAULT_CONFIG, LOG_LINE_FLUSH_TIMEOUT } from './constants';
 import { addDebugInfo } from './debug-info';
+import { addDefaultPlugins, addPluginMethods, initPlugins } from './plugin-manager';
+import utils from './utils';
+import { validateOptions } from './validation';
 
-import { LogDNABrowserOptions } from './logdna';
+import { BrowserLogsOptions } from './browserlogs';
 
-import { LogDNAMethods } from './LogDNAMethods';
+import { BrowserLogsMethods } from './BrowserLogsMethods';
 
-let options: LogDNABrowserOptions = DEFAULT_CONFIG;
+let options: BrowserLogsOptions = DEFAULT_CONFIG;
 
 let isConfigCompleted = false;
 let isInitCompleted = false;
 let sampleRate: number;
-let methods: LogDNAMethods = new LogDNAMethods();
+let methods: BrowserLogsMethods = new BrowserLogsMethods();
 
-const config = (ingestionKey: string, opts: LogDNABrowserOptions = DEFAULT_CONFIG) => {
+const config = (ingestionKey: string, opts: BrowserLogsOptions = DEFAULT_CONFIG) => {
   options = Object.assign(DEFAULT_CONFIG, opts);
   options.ingestionKey = ingestionKey;
   options.tags = utils.parseTags(opts.tags);
@@ -31,7 +30,7 @@ const config = (ingestionKey: string, opts: LogDNABrowserOptions = DEFAULT_CONFI
   isConfigCompleted = true;
 };
 
-const init = (ingestionKey: string, opts: LogDNABrowserOptions = DEFAULT_CONFIG) => {
+const init = (ingestionKey: string, opts: BrowserLogsOptions = DEFAULT_CONFIG) => {
   if (ingestionKey) {
     config(ingestionKey, opts);
   }
@@ -44,13 +43,18 @@ const init = (ingestionKey: string, opts: LogDNABrowserOptions = DEFAULT_CONFIG)
   sampleRate = utils.generateSampleRateScore();
   initPlugins(options);
   addFlushEvents();
-  sessionManagerInit();
   addDebugInfo();
 
   isInitCompleted = true;
 };
 
-const getOptions = (): LogDNABrowserOptions => options;
+const setIngestionKey = (ingestionKey: string) => {
+  if (ingestionKey) {
+    options.ingestionKey = ingestionKey;
+  }
+};
+
+const getOptions = (): BrowserLogsOptions => options;
 const isConfigured = (): Boolean => isConfigCompleted;
 const isInitiated = (): Boolean => isInitCompleted;
 
@@ -71,4 +75,4 @@ const addFlushEvents = () => {
   });
 };
 
-export { config, init, getOptions, isSendingDisabled, isConfigured, isInitiated, methods };
+export { config, getOptions, init, isConfigured, isInitiated, isSendingDisabled, methods, setIngestionKey };

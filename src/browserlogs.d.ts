@@ -1,13 +1,13 @@
 import { GlobalErrorHandlerPlugin } from './plugins/global-handler';
 declare module 'logdna-browser-2' {}
 
-interface LogDNAMethods {}
+interface BrowserLogsMethods {}
 
 // This is fallback to 3rd party plugin methods
 // Until TS has better Module Augmentation without
 // relative paths https://github.com/Microsoft/TypeScript/issues/18877
-declare module './LogDNAMethods' {
-  interface LogDNAMethods {
+declare module './BrowserLogsMethods' {
+  interface BrowserLogsMethods {
     log(message: any, context?: LineContext, level?: LogLevel): void;
     error(message: any, context?: LineContext, level?: LogLevel): void;
     warn(message: any, context?: LineContext, level?: LogLevel): void;
@@ -16,20 +16,18 @@ declare module './LogDNAMethods' {
   }
 }
 
-declare module './LogDNAMethods' {
-  interface LogDNAMethods {
+declare module './BrowserLogsMethods' {
+  interface BrowserLogsMethods {
     mark(name: string): void;
     measure(name: string, start: string, end: string): void;
   }
 }
 
-export type LogDNALogLine = {
-  line: string;
-  timestamp?: number;
-  level?: string;
-  meta?: any;
-  env?: string;
-  app?: string;
+export type BrowserLogsLogEntry = {
+  log: string;
+  timestamp: number;
+  level: string;
+  statusCode?: number;
 };
 
 interface ConsoleOptions {
@@ -37,11 +35,9 @@ interface ConsoleOptions {
   integrations?: LogLevel[];
 }
 
-export type LogDNABrowserOptions = {
-  hostname?: string;
+export type BrowserLogsOptions = {
   url?: string;
-  app?: string;
-  env?: string;
+  ingestionKey?: string;
   flushInterval?: number;
   enableStacktrace?: boolean;
   sampleRate?: number;
@@ -51,7 +47,6 @@ export type LogDNABrowserOptions = {
   globalErrorHandlers?: GlobalErrorHandlerPlugin | boolean;
   debug?: boolean;
   disabled?: boolean;
-  ingestionKey?: string;
   hooks?: HooksOption;
   internalErrorLogger?: Function;
   disableInternalErrorLogger?: Boolean;

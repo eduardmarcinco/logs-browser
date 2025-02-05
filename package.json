@@ -1,6 +1,6 @@
 {
-  "name": "@logdna/browser",
-  "version": "2.3.1",
+  "name": "browser-logs",
+  "version": "0.0.1",
   "module": "dist/index.esm.js",
   "main": "dist/index.js",
   "license": "MIT",
@@ -18,10 +18,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/logdna/logdna-browser"
+    "url": "https://github.com/eduardmarcinco/broser-logs"
   },
   "keywords": [
-    "logdna",
     "logging",
     "performance",
     "metrics",
@@ -35,13 +34,13 @@
     "LICENSE"
   ],
   "author": {
-    "name": "LogDNA, Inc.",
-    "email": "help@logdna.com"
+    "name": "Eduard Marcinco",
+    "email": "eduard@marcinco.me"
   },
   "bugs": {
-    "url": "https://github.com/logdna/logdna-browser/issues"
+    "url": "https://github.com/eduardmarcinco/broser-logs/issues"
   },
-  "homepage": "https://github.com/logdna/logdna-browser#readme",
+  "homepage": "https://github.com/eduardmarcinco/broser-logs#readme",
   "devDependencies": {
     "@rollup/plugin-commonjs": "^19.0.0",
     "@rollup/plugin-json": "^4.1.0",
@@ -62,7 +61,6 @@
     "rollup-plugin-terser": "^7.0.2",
     "rollup-plugin-typescript2": "^0.36.0",
     "semantic-release": "^17.4.2",
-    "semantic-release-config-logdna": "^1.1.1",
     "serve": "^11.3.2",
     "ts-jest": "^26.4.4",
     "ts-node": "^10.9.2",
@@ -87,7 +85,6 @@
   "release": {
     "branches": [
       "main"
-    ],
-    "extends": "semantic-release-config-logdna"
+    ]
   }
 }

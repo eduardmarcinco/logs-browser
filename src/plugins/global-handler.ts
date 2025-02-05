@@ -1,5 +1,5 @@
+import { Plugin } from '../browserlogs';
 import { captureError } from '../capture';
-import { Plugin } from '../logdna';
 
 export type GlobalErrorHandlerPlugin =
   | {

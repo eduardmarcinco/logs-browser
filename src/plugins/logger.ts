@@ -1,10 +1,10 @@
+import { LineContext, LogLevel } from '../browserlogs';
 import { captureMessage } from '../capture';
-import { LogLevel, LineContext } from '../logdna';
-import utils from '../utils';
 import { getOptions } from '../init';
+import utils from '../utils';
 
-declare module '../LogDNAMethods' {
-  interface LogDNAMethods {
+declare module '../BrowserLogsMethods' {
+  interface BrowserLogsMethods {
     log(message: any, context?: LineContext, level?: LogLevel): void;
     error(message: any, context?: LineContext, level?: LogLevel): void;
     warn(message: any, context?: LineContext, level?: LogLevel): void;
@@ -21,7 +21,7 @@ const log = (message: any, context?: LineContext, level: LogLevel = 'log') => {
   });
 
   if (getOptions().debug) {
-    utils.originalConsole[level](...[message, context].filter(i => i !== undefined));
+    utils.originalConsole[level](...[message, context].filter((i) => i !== undefined));
   }
 };
 

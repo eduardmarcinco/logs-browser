@@ -1,12 +1,10 @@
 // All messages run through here
-import { isSendingDisabled, getOptions } from './init';
+import { LogMessage } from './browserlogs';
 import { process } from './buffer-manager';
+import { getOptions, isSendingDisabled } from './init';
 import utils from './utils';
-import { getStaticContext, getContext, getDynamicContext } from './context-manager';
-import { getSessionId } from './session-manager';
-import { LogMessage } from './logdna';
 
-const captureMessage = async ({ level = 'log', message, lineContext = {} }: LogMessage) => {
+const captureMessage = async ({ level = 'log', message }: LogMessage) => {
   if (isSendingDisabled()) return;
 
   if (message instanceof Error) {
@@ -14,7 +12,7 @@ const captureMessage = async ({ level = 'log', message, lineContext = {} }: LogM
     return;
   }
 
-  await generateLogLine({ level, message, lineContext });
+  await generateLogLine({ level, message });
 };
 
 const captureError = async (error: any, isUnhandledRejection = false) => {
@@ -29,24 +27,16 @@ const captureError = async (error: any, isUnhandledRejection = false) => {
   await generateLogLine({
     level: 'error',
     message,
-    errorContext: {
-      colno: error.columnNumber || error.colno || error.colNo,
-      lineno: error.lineNumber || error.lineno || error.lineNo,
-      stacktrace: await utils.getStackTraceFromError(error),
-      source: error.fileName || error.source,
-    },
-    disableStacktrace: !!(error.stack || error.stacktrace), // Don't generate a second stacktrace for errors since they already have it
   });
 };
 
-const generateLogLine = async ({ level = 'log', message, lineContext = {}, errorContext = null, disableStacktrace = false }: LogMessage) => {
+const generateLogLine = async ({ level = 'log', message }: LogMessage) => {
   const opts = getOptions();
 
   // run the beforeSend hooks
   const data: LogMessage = (getOptions().hooks || { beforeSend: [] }).beforeSend.reduce((acc: LogMessage, fn: Function) => (acc == null ? null : fn(acc)), {
     level,
     message,
-    lineContext,
   });
 
   // beforeSend stopped the log
@@ -56,18 +46,8 @@ const generateLogLine = async ({ level = 'log', message, lineContext = {}, error
 
   process({
     timestamp: Math.floor(Date.now() / 1000),
-    app: opts.app || window.location.host,
-    line: typeof data.message === 'string' ? data.message : utils.stringify(data.message),
+    log: typeof data.message === 'string' ? data.message : utils.stringify(data.message),
     level: data.level,
-    meta: {
-      sessionId: getSessionId(),
-      ...getStaticContext(),
-      ...getDynamicContext(),
-      stacktrace: disableStacktrace || !opts.enableStacktrace ? undefined : await utils.getStackTrace(),
-      context: { ...getContext() },
-      lineContext: data.lineContext,
-      errorContext,
-    },
   });
 };
 

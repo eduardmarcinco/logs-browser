@@ -27,7 +27,7 @@ describe('init.ts', () => {
 
     it('should set add tags in options', () => {
       config(INGESTION_KEY, { tags: ['another-tag'] });
-      expect(getOptions().tags).toEqual('LogDNA-Browser,another-tag');
+      expect(getOptions().tags).toEqual('BrowserLogs,another-tag');
     });
 
     it('should set flush interval', () => {

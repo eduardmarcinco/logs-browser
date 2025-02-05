@@ -1,11 +1,11 @@
 import { addDefaultPlugins, addPluginMethods, initPlugins, getInstalledPlugins } from '../src/plugin-manager';
 
 import { DEFAULT_CONFIG } from '../src/constants';
-import { LogDNAMethods } from '../src/LogDNAMethods';
-import { LogDNABrowserOptions, Plugin, LogMessage } from '../src/logdna';
+import { BrowserLogsMethods } from '../src/BrowserLogsMethods';
+import { BrowserLogsOptions, Plugin, LogMessage } from '../src/browserlogs';
 
-declare module '../src/LogDNAMethods' {
-  interface LogDNAMethods {
+declare module '../src/BrowserLogsMethods' {
+  interface BrowserLogsMethods {
     testMethod: () => {};
   }
 }
@@ -34,7 +34,7 @@ const TestPlugin = (): Plugin => ({
 describe('plugin-manager.ts', () => {
   describe('no options.plugins path', () => {
     it('should not install anything', () => {
-      let options: LogDNABrowserOptions = DEFAULT_CONFIG;
+      let options: BrowserLogsOptions = DEFAULT_CONFIG;
       DEFAULT_CONFIG.plugins = undefined;
       options = DEFAULT_CONFIG;
       expect(addPluginMethods(options)).toEqual(undefined);
@@ -45,7 +45,7 @@ describe('plugin-manager.ts', () => {
   });
 
   describe('options.plugins exists', () => {
-    let options: LogDNABrowserOptions = DEFAULT_CONFIG;
+    let options: BrowserLogsOptions = DEFAULT_CONFIG;
     beforeAll(() => {
       DEFAULT_CONFIG.plugins = [TestPlugin()];
       options = DEFAULT_CONFIG;
@@ -58,12 +58,12 @@ describe('plugin-manager.ts', () => {
     });
 
     describe('addPluginMethods', () => {
-      it('should add methods to LogDNAMethods and not call the function when not initialized', () => {
-        expect(LogDNAMethods.prototype.testMethod).toBeFalsy();
+      it('should add methods to BrowserLogsMethods and not call the function when not initialized', () => {
+        expect(BrowserLogsMethods.prototype.testMethod).toBeFalsy();
         addPluginMethods(options);
-        expect(LogDNAMethods.prototype.testMethod).toBeTruthy();
-        expect(typeof LogDNAMethods.prototype.testMethod).toEqual('function');
-        const result = LogDNAMethods.prototype.testMethod();
+        expect(BrowserLogsMethods.prototype.testMethod).toBeTruthy();
+        expect(typeof BrowserLogsMethods.prototype.testMethod).toEqual('function');
+        const result = BrowserLogsMethods.prototype.testMethod();
         expect(result).toBeUndefined();
         expect(testMethod).toHaveBeenCalledTimes(0);
       });

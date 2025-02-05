@@ -1,6 +1,6 @@
-import { LogDNABrowserOptions } from './logdna';
+import { BrowserLogsOptions } from './browserlogs';
 
-const DEFAULT_INGESTION_URL = 'https://logs.mezmo.com/logs/ingest';
+const DEFAULT_INGESTION_URL = '';
 const LOG_LINE_FLUSH_TIMEOUT = 250; // ms
 const FLUSH_BYTE_LIMIT = 60 * 1024; // Max chrome allows with fetch and keep alive is 64kb, we are making it smaller to account for headers and unknowns
 const SAMPLE_RATE = 100;
@@ -10,21 +10,17 @@ const MAX_BACK_OFF = 60000; // 60 sec
 
 const MAX_FETCH_ERROR_RETRY = 30;
 
-const DEFAULT_TAG = 'LogDNA-Browser';
+const DEFAULT_TAG = 'BrowserLogs';
 
-const SESSION_SCORE_KEY = 'logdna::browser::sessionscore';
-const SESSION_KEY = 'logdna::browser::sessionid';
+const SESSION_SCORE_KEY = 'logs::browser::sessionscore';
+const SESSION_KEY = 'logs::browser::sessionid';
 
-const HOSTNAME_CHECK = new RegExp('^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9])\\.)*' + '([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9-]*[A-Za-z0-9])$');
-
-const DEFAULT_CONFIG: LogDNABrowserOptions = {
+const DEFAULT_CONFIG: BrowserLogsOptions = {
   url: DEFAULT_INGESTION_URL,
-  hostname: 'logdna-browser-logger',
   flushInterval: LOG_LINE_FLUSH_TIMEOUT,
   enableStacktrace: true,
   sampleRate: SAMPLE_RATE,
   tags: [],
-  app: '',
   plugins: [],
   console: true,
   globalErrorHandlers: true,
@@ -40,14 +36,13 @@ const DEFAULT_CONFIG: LogDNABrowserOptions = {
 export {
   DEFAULT_CONFIG,
   DEFAULT_INGESTION_URL,
-  LOG_LINE_FLUSH_TIMEOUT,
-  FLUSH_BYTE_LIMIT,
-  HOSTNAME_CHECK,
-  SAMPLE_RATE,
-  MAX_FETCH_ERROR_RETRY,
-  STARTING_BACK_OFF,
-  MAX_BACK_OFF,
   DEFAULT_TAG,
-  SESSION_SCORE_KEY,
+  FLUSH_BYTE_LIMIT,
+  LOG_LINE_FLUSH_TIMEOUT,
+  MAX_BACK_OFF,
+  MAX_FETCH_ERROR_RETRY,
+  SAMPLE_RATE,
   SESSION_KEY,
+  SESSION_SCORE_KEY,
+  STARTING_BACK_OFF,
 };

@@ -1,15 +1,12 @@
 import safeStringify from 'fast-safe-stringify';
 import StackTrace from 'stacktrace-js';
-import { HOSTNAME_CHECK, DEFAULT_TAG, SESSION_SCORE_KEY } from './constants';
-import { internalErrorLogger } from './capture';
+import { DEFAULT_TAG, SESSION_SCORE_KEY } from './constants';
 
-import { Tags } from './logdna';
-
-const validateHostname = (hostname: string) => HOSTNAME_CHECK.test(hostname);
+import { Tags } from './browserlogs';
 
 const parseTags = (tags: Tags = []) => {
   if ((typeof tags !== 'string' && !Array.isArray(tags)) || (Array.isArray(tags) && tags.some((tag) => typeof tag !== 'string'))) {
-    throw new Error(`LogDNA Browser Logger \`tags\` must be a string or an array of strings`);
+    throw new Error(`Browser Logs \`tags\` must be a string or an array of strings`);
   }
 
   if (typeof tags === 'string') {
@@ -25,7 +22,7 @@ const processStackFrames = (stackframes: any) => {
   return stackframes
     .map(function (sf: any) {
       const sfString = sf.toString();
-      if (sfString.includes('logdnasrc') || sfString.includes('@logdna/browser') || sfString.includes('stacktrace-js')) return null;
+      if (sfString.includes('browserlogssrc') || sfString.includes('browser-logs') || sfString.includes('stacktrace-js')) return null;
       return sfString;
     })
     .filter((l: string) => l !== null)
@@ -126,14 +123,13 @@ const originalConsole: any = consoleMethods.reduce(
 );
 
 // This will delay the caching of the original instance of the console
-// until after logdna is enabled and initialized for use with SSR.
+// until after BrowserLogs is enabled and initialized for use with SSR.
 const cacheConsole = () => {
   const { log, error, debug, warn, info } = window.console;
   cachedConsole = { log, error, debug, warn, info };
 };
 
 export default {
-  validateHostname,
   parseTags,
   stringify,
   getStackTrace,
