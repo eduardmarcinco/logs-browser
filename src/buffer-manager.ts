@@ -74,16 +74,7 @@ const send = async (lines: BrowserLogsLogEntry[]) => {
     return;
   }
 
-  const ingestUrlParams = new URLSearchParams([
-    // @ts-ignore
-    ['hostname', opts.hostname],
-    // @ts-ignore
-    ['now', `${Date.now()}`],
-    // @ts-ignore
-    ['tags', opts.tags],
-  ]);
-
-  const ingestUrl = `${opts.url}?${ingestUrlParams}`;
+  const ingestUrl = `${opts.url}`;
   const errorMsg = 'Unable to send previous logs batch to backend';
 
   try {
@@ -94,7 +85,7 @@ const send = async (lines: BrowserLogsLogEntry[]) => {
         Authorization: `Bearer ${opts.ingestionKey}`,
         'Content-Type': 'application/json',
       },
-      body: utils.stringify({ lines }),
+      body: utils.stringify(lines),
     });
 
     if (response.ok) {

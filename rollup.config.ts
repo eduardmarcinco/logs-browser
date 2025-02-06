@@ -25,7 +25,7 @@ const config = OUTPUT_DATA.map(({ file, format, input }) => ({
     file,
     format,
     sourcemap: true,
-    name: 'logdna',
+    name: 'browser-logs',
   },
   external: [],
   watch: {
@@ -50,7 +50,7 @@ const config = OUTPUT_DATA.map(({ file, format, input }) => ({
       },
     }),
     copy({
-      targets: [{ src: 'src/logdna.d.ts', dest: 'dist/types' }],
+      targets: [{ src: 'src/browserlogs.d.ts', dest: 'dist/types' }],
     }),
   ],
 }));

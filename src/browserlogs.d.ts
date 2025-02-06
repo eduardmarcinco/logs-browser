@@ -8,11 +8,11 @@ interface BrowserLogsMethods {}
 // relative paths https://github.com/Microsoft/TypeScript/issues/18877
 declare module './BrowserLogsMethods' {
   interface BrowserLogsMethods {
-    log(message: any, context?: LineContext, level?: LogLevel): void;
-    error(message: any, context?: LineContext, level?: LogLevel): void;
-    warn(message: any, context?: LineContext, level?: LogLevel): void;
-    info(message: any, context?: LineContext, level?: LogLevel): void;
-    debug(message: any, context?: LineContext, level?: LogLevel): void;
+    log(message: any, level?: LogLevel): void;
+    error(message: any, level?: LogLevel): void;
+    warn(message: any, level?: LogLevel): void;
+    info(message: any, level?: LogLevel): void;
+    debug(message: any, level?: LogLevel): void;
   }
 }
 
@@ -25,7 +25,7 @@ declare module './BrowserLogsMethods' {
 
 export type BrowserLogsLogEntry = {
   log: string;
-  timestamp: number;
+  timestamp: string;
   level: string;
   statusCode?: number;
 };
@@ -53,8 +53,6 @@ export type BrowserLogsOptions = {
   internalErrorLoggerLevel?: LogLevel;
 };
 
-export type LineContext = object;
-
 export type ErrorContext = {
   colno?: number;
   lineno?: number;
@@ -65,7 +63,6 @@ export type ErrorContext = {
 export type LogMessage = {
   level: LogLevel;
   message: any;
-  lineContext?: LineContext;
   errorContext?: ErrorContext | null | undefined;
   disableStacktrace?: boolean;
 };

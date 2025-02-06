@@ -44,8 +44,11 @@ const generateLogLine = async ({ level = 'log', message }: LogMessage) => {
     return;
   }
 
+  const date = new Date();
+  const timestamp = date.toISOString().replace('Z', '+00:00');
+
   process({
-    timestamp: Math.floor(Date.now() / 1000),
+    timestamp: timestamp,
     log: typeof data.message === 'string' ? data.message : utils.stringify(data.message),
     level: data.level,
   });

@@ -1,44 +1,43 @@
-import { LineContext, LogLevel } from '../browserlogs';
+import { LogLevel } from '../browserlogs';
 import { captureMessage } from '../capture';
 import { getOptions } from '../init';
 import utils from '../utils';
 
 declare module '../BrowserLogsMethods' {
   interface BrowserLogsMethods {
-    log(message: any, context?: LineContext, level?: LogLevel): void;
-    error(message: any, context?: LineContext, level?: LogLevel): void;
-    warn(message: any, context?: LineContext, level?: LogLevel): void;
-    debug(message: any, context?: LineContext, level?: LogLevel): void;
-    info(message: any, context?: LineContext, level?: LogLevel): void;
+    log(message: any, level?: LogLevel): void;
+    error(message: any, level?: LogLevel): void;
+    warn(message: any, level?: LogLevel): void;
+    debug(message: any, level?: LogLevel): void;
+    info(message: any, level?: LogLevel): void;
   }
 }
 
-const log = (message: any, context?: LineContext, level: LogLevel = 'log') => {
+const log = (message: any, level: LogLevel = 'log') => {
   captureMessage({
     level,
     message,
-    lineContext: context,
   });
 
   if (getOptions().debug) {
-    utils.originalConsole[level](...[message, context].filter((i) => i !== undefined));
+    utils.originalConsole[level](...[message].filter((i) => i !== undefined));
   }
 };
 
-const error = (message: any, context?: LineContext) => {
-  log(message, context, 'error');
+const error = (message: any) => {
+  log(message, 'error');
 };
 
-const warn = (message: any, context?: LineContext) => {
-  log(message, context, 'warn');
+const warn = (message: any) => {
+  log(message, 'warn');
 };
 
-const debug = (message: any, context?: LineContext) => {
-  log(message, context, 'debug');
+const debug = (message: any) => {
+  log(message, 'debug');
 };
 
-const info = (message: any, context?: LineContext) => {
-  log(message, context, 'info');
+const info = (message: any) => {
+  log(message, 'info');
 };
 
 const Logger = () => ({

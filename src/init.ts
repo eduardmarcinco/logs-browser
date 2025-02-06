@@ -48,7 +48,7 @@ const init = (ingestionKey: string, opts: BrowserLogsOptions = DEFAULT_CONFIG) =
   isInitCompleted = true;
 };
 
-const setIngestionKey = (ingestionKey: string) => {
+const refreshIngestionKey = (ingestionKey: string) => {
   if (ingestionKey) {
     options.ingestionKey = ingestionKey;
   }
@@ -75,4 +75,4 @@ const addFlushEvents = () => {
   });
 };
 
-export { config, getOptions, init, isConfigured, isInitiated, isSendingDisabled, methods, setIngestionKey };
+export { config, getOptions, init, isConfigured, isInitiated, isSendingDisabled, methods, refreshIngestionKey };

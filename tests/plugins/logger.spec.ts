@@ -26,78 +26,71 @@ describe('logger.ts', () => {
 
   it('should call captureMessage with the correct log level and data', () => {
     const methods = logger.methods();
-    methods.log('Message', { abc: 123 }, 'log');
+    methods.log('Message', 'log');
     expect(captureMessage).toHaveBeenCalledTimes(1);
     expect(captureMessage).toHaveBeenCalledWith({
       level: 'log',
       message: 'Message',
-      lineContext: { abc: 123 },
     });
   });
 
   it('should call captureMessage with the correct log level and data when message is an object', () => {
     const methods = logger.methods();
-    methods.log({ test: 'Message' }, { abc: 123 }, 'log');
+    methods.log({ test: 'Message' }, 'log');
     expect(captureMessage).toHaveBeenCalledTimes(1);
     expect(captureMessage).toHaveBeenCalledWith({
       level: 'log',
       message: { test: 'Message' },
-      lineContext: { abc: 123 },
     });
   });
 
   it('should call captureMessage with the correct log level and data', () => {
     const methods = logger.methods();
-    methods.log('Message', { abc: 123 });
+    methods.log('Message');
     expect(captureMessage).toHaveBeenCalledTimes(1);
     expect(captureMessage).toHaveBeenCalledWith({
       level: 'log',
       message: 'Message',
-      lineContext: { abc: 123 },
     });
   });
 
   it('should call captureMessage with the correct log level and data', () => {
     const methods = logger.methods();
-    methods.error('Message', { abc: 123 });
+    methods.error('Message');
     expect(captureMessage).toHaveBeenCalledTimes(1);
     expect(captureMessage).toHaveBeenCalledWith({
       level: 'error',
       message: 'Message',
-      lineContext: { abc: 123 },
     });
   });
 
   it('should call captureMessage with the correct log level and data', () => {
     const methods = logger.methods();
-    methods.warn('Message', { abc: 123 });
+    methods.warn('Message');
     expect(captureMessage).toHaveBeenCalledTimes(1);
     expect(captureMessage).toHaveBeenCalledWith({
       level: 'warn',
       message: 'Message',
-      lineContext: { abc: 123 },
     });
   });
 
   it('should call captureMessage with the correct log level and data', () => {
     const methods = logger.methods();
-    methods.debug('Message', { abc: 123 });
+    methods.debug('Message');
     expect(captureMessage).toHaveBeenCalledTimes(1);
     expect(captureMessage).toHaveBeenCalledWith({
       level: 'debug',
       message: 'Message',
-      lineContext: { abc: 123 },
     });
   });
 
   it('should call captureMessage with the correct log level and data', () => {
     const methods = logger.methods();
-    methods.info('Message', { abc: 123 });
+    methods.info('Message');
     expect(captureMessage).toHaveBeenCalledTimes(1);
     expect(captureMessage).toHaveBeenCalledWith({
       level: 'info',
       message: 'Message',
-      lineContext: { abc: 123 },
     });
   });
 
@@ -109,14 +102,13 @@ describe('logger.ts', () => {
     utils.originalConsole.log = jest.fn();
 
     const methods = logger.methods();
-    methods.log('Message', { abc: 123 });
+    methods.log('Message');
     expect(captureMessage).toHaveBeenCalledTimes(1);
     expect(captureMessage).toHaveBeenCalledWith({
       level: 'log',
       message: 'Message',
-      lineContext: { abc: 123 },
     });
-    expect(utils.originalConsole.log).toHaveBeenLastCalledWith('Message', { abc: 123 });
+    expect(utils.originalConsole.log).toHaveBeenLastCalledWith('Message');
   });
 
   it('should call captureMessage once and send data to the browser console when debug is enabled and filter line context when undefined', () => {
@@ -144,12 +136,11 @@ describe('logger.ts', () => {
     utils.originalConsole.log = jest.fn();
 
     const methods = logger.methods();
-    methods.log('Message', { abc: 123 });
+    methods.log('Message');
     expect(captureMessage).toHaveBeenCalledTimes(1);
     expect(captureMessage).toHaveBeenCalledWith({
       level: 'log',
       message: 'Message',
-      lineContext: { abc: 123 },
     });
     expect(utils.originalConsole.log).toHaveBeenCalledTimes(0);
   });

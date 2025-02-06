@@ -4,7 +4,7 @@ import { BrowserLogsLogEntry } from '../src/browserlogs';
 import * as captureManger from '../src/capture';
 
 const logLine: BrowserLogsLogEntry = {
-  timestamp: 999999999,
+  timestamp: '2025-01-25T13:00:00.000+00:00',
   level: 'log',
   log: 'Test message' + 999999999,
 };
